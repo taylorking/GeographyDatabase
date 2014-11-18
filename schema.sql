@@ -16,44 +16,53 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `auth`
+-- Table structure for table `admin`
 --
 
-DROP TABLE IF EXISTS `auth`;
+DROP TABLE IF EXISTS `admin`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `auth` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(200) NOT NULL,
-  `password` varchar(500) NOT NULL,
-  `email` varchar(500) DEFAULT NULL,
-  `ip_log` varchar(100) DEFAULT NULL,
-  `last_login` datetime DEFAULT NULL,
-  `role` varchar(100) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=26 DEFAULT CHARSET=latin1;
+CREATE TABLE `admin` (
+  `user_id` varchar(100) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  `position` varchar(200) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `admin_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Table structure for table `comments`
+-- Table structure for table `copy`
 --
 
-DROP TABLE IF EXISTS `comments`;
+DROP TABLE IF EXISTS `copy`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `comments` (
-  `user_id` varchar(100) NOT NULL,
+CREATE TABLE `copy` (
+  `copy_id` int(11) NOT NULL,
   `map_id` int(11) NOT NULL,
-  `comment` varchar(200) NOT NULL,
-  `comment_id` int(11) NOT NULL AUTO_INCREMENT,
-  `ip_address` varchar(20) DEFAULT NULL,
-  `parent` int(11) DEFAULT NULL,
-  PRIMARY KEY (`comment_id`),
+  `checked_out_date` datetime DEFAULT NULL,
+  `checked_out_user` varchar(100) DEFAULT NULL,
+  PRIMARY KEY (`copy_id`),
   KEY `map_id` (`map_id`),
-  KEY `parent` (`parent`),
-  CONSTRAINT `comments_ibfk_2` FOREIGN KEY (`parent`) REFERENCES `comments` (`comment_id`),
-  CONSTRAINT `comments_ibfk_1` FOREIGN KEY (`map_id`) REFERENCES `maps` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  KEY `checked_out_user` (`checked_out_user`),
+  CONSTRAINT `copy_ibfk_1` FOREIGN KEY (`map_id`) REFERENCES `maps` (`id`),
+  CONSTRAINT `copy_ibfk_2` FOREIGN KEY (`checked_out_user`) REFERENCES `user` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `document_type`
+--
+
+DROP TABLE IF EXISTS `document_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `document_type` (
+  `type` varchar(50) NOT NULL,
+  PRIMARY KEY (`type`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -68,10 +77,10 @@ CREATE TABLE `maps` (
   `GKey` char(4) NOT NULL,
   `Subject` varchar(3) NOT NULL,
   `CatalogDate` char(4) NOT NULL,
-  `Publisher` varchar(2) DEFAULT NULL,
+  `Publisher` char(2) NOT NULL,
   `Identifier` varchar(100) DEFAULT NULL,
   `Title` varchar(100) NOT NULL,
-  `Type` int(11) NOT NULL,
+  `Type` varchar(50) NOT NULL,
   `Topic` varchar(200) NOT NULL,
   `SecondaryTopic` varchar(200) DEFAULT NULL,
   `PublicationDate` varchar(10) NOT NULL,
@@ -80,8 +89,64 @@ CREATE TABLE `maps` (
   `Area2` varchar(100) DEFAULT NULL,
   `Area3` varchar(100) NOT NULL,
   `Other` varchar(500) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`id`),
+  KEY `Type` (`Type`),
+  KEY `Publisher` (`Publisher`),
+  KEY `GKey` (`GKey`),
+  CONSTRAINT `maps_ibfk_1` FOREIGN KEY (`Publisher`) REFERENCES `publisher` (`publisher_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `publisher`
+--
+
+DROP TABLE IF EXISTS `publisher`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `publisher` (
+  `name` varchar(200) NOT NULL,
+  `country` varchar(100) NOT NULL,
+  `address` varchar(500) NOT NULL,
+  `publisher_id` char(2) NOT NULL,
+  PRIMARY KEY (`publisher_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `student`
+--
+
+DROP TABLE IF EXISTS `student`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `student` (
+  `user_id` varchar(100) NOT NULL,
+  `position` varchar(100) NOT NULL,
+  `start_date` date DEFAULT NULL,
+  `name` varchar(200) NOT NULL,
+  `email` varchar(200) NOT NULL,
+  `admin_by` varchar(100) NOT NULL,
+  PRIMARY KEY (`user_id`),
+  KEY `admin_by` (`admin_by`),
+  CONSTRAINT `student_ibfk_2` FOREIGN KEY (`admin_by`) REFERENCES `admin` (`user_id`),
+  CONSTRAINT `student_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `user` (
+  `password` varchar(200) NOT NULL,
+  `user_id` varchar(100) NOT NULL,
+  `name` varchar(200) NOT NULL,
+  PRIMARY KEY (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -93,4 +158,4 @@ CREATE TABLE `maps` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-07 16:16:39
+-- Dump completed on 2014-11-18 16:23:38

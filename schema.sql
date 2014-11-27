@@ -40,7 +40,7 @@ DROP TABLE IF EXISTS `copy`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `copy` (
-  `copy_id` int(11) NOT NULL,
+  `copy_id` int(11) NOT NULL AUTO_INCREMENT,
   `map_id` int(11) NOT NULL,
   `checked_out_date` datetime DEFAULT NULL,
   `checked_out_user` varchar(100) DEFAULT NULL,
@@ -49,7 +49,7 @@ CREATE TABLE `copy` (
   KEY `checked_out_user` (`checked_out_user`),
   CONSTRAINT `copy_ibfk_1` FOREIGN KEY (`map_id`) REFERENCES `maps` (`id`),
   CONSTRAINT `copy_ibfk_2` FOREIGN KEY (`checked_out_user`) REFERENCES `user` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -61,6 +61,8 @@ DROP TABLE IF EXISTS `document_type`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `document_type` (
   `type` varchar(50) NOT NULL,
+  `description` varchar(200) DEFAULT NULL,
+  `type_name` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`type`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -94,7 +96,7 @@ CREATE TABLE `maps` (
   KEY `Publisher` (`Publisher`),
   KEY `GKey` (`GKey`),
   CONSTRAINT `maps_ibfk_1` FOREIGN KEY (`Publisher`) REFERENCES `publisher` (`publisher_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -129,8 +131,8 @@ CREATE TABLE `student` (
   `admin_by` varchar(100) NOT NULL,
   PRIMARY KEY (`user_id`),
   KEY `admin_by` (`admin_by`),
-  CONSTRAINT `student_ibfk_2` FOREIGN KEY (`admin_by`) REFERENCES `admin` (`user_id`),
-  CONSTRAINT `student_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`)
+  CONSTRAINT `student_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`),
+  CONSTRAINT `student_ibfk_2` FOREIGN KEY (`admin_by`) REFERENCES `admin` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -158,4 +160,4 @@ CREATE TABLE `user` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2014-11-18 16:23:38
+-- Dump completed on 2014-11-27 10:19:04
